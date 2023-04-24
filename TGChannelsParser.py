@@ -1,7 +1,9 @@
 from pyrogram import Client
 from Settings import Settings
 
+
 class TGChannelsParser:
+    @staticmethod
     async def parse(channels):
         tracked_messages = dict()
         async with Client("my_account", Settings.ChannelsParser.api_id, Settings.ChannelsParser.api_hash) as app:
