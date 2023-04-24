@@ -2,6 +2,7 @@ class TGChannelsFinder:
     @staticmethod
     def get_channels() -> list:
         return [
-            "safffds",
-            "alalalllllla"
+            "fedorovgd",
+            "Sever_Siyanie",
+            "nationkurs"
         ]

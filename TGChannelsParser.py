@@ -11,5 +11,6 @@ class TGChannelsParser:
                 if await app.get_chat_members_count(channel) < Settings.ChannelsFilter.min_members_to_track: continue
                 async for message in app.get_chat_history(channel, offset_date=Settings.ChannelsParser.date_to):
                     if message.date < Settings.ChannelsParser.date_from: break
+                    if not message.text: continue
                     tracked_messages[channel] = tracked_messages.get(channel, []) + [message.text]
         return tracked_messages
