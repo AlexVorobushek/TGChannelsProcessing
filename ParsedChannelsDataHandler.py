@@ -1,4 +1,5 @@
 from Settings import Settings
+from progress.bar import Bar
 
 
 class ParsedChannelsDataHandler:
@@ -14,10 +15,14 @@ class ParsedChannelsDataHandler:
         return sum(map(ParsedChannelsDataHandler.find_marker_in_message, messages))
 
     @staticmethod
-    def process_all_data(channels_to_messages: dict):
-        return dict(
-            map(
-                lambda item: (item[0], ParsedChannelsDataHandler.process_channel(item[1])),
-                channels_to_messages.items()
-            )
-        )
+    def process_all_data(channels_to_messages: dict) -> dict:
+        with Bar('process messages of channels', max=len(channels_to_messages), fill="-") as bar:
+            for channel, messages in channels_to_messages.items():
+                channels_to_messages[channel] = ParsedChannelsDataHandler.process_channel(messages)
+                bar.next()
+
+        return channels_to_messages
+
+    @staticmethod
+    def write_statistic():
+        pass
