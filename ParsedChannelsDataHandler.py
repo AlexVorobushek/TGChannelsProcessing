@@ -15,13 +15,14 @@ class ParsedChannelsDataHandler:
         return sum(map(ParsedChannelsDataHandler.find_marker_in_message, messages))
 
     @staticmethod
-    def process_all_data(channels_to_messages: dict) -> dict:
-        with Bar('process messages of channels', max=len(channels_to_messages), fill="-") as bar:
-            for channel, messages in channels_to_messages.items():
-                channels_to_messages[channel] = ParsedChannelsDataHandler.process_channel(messages)
+    def process_all_data(channel_and_messages_table: list) -> list:
+        with Bar('process messages of channels', max=len(channel_and_messages_table), fill="-") as bar:
+            for line in channel_and_messages_table:
+                line["value"] = ParsedChannelsDataHandler.process_channel(line["messages"])
+                del line["messages"]
                 bar.next()
 
-        return channels_to_messages
+        return channel_and_messages_table
 
     @staticmethod
     def write_statistic():
