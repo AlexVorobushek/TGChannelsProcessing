@@ -1,9 +1,7 @@
-import pyrogram.errors.exceptions.all
 from pyrogram import Client
 from Settings import Settings
 from progress.bar import Bar
-from time import sleep
-
+from DataHandler import DataHandler
 
 class TGChannelsParser:
     @staticmethod
@@ -16,51 +14,29 @@ class TGChannelsParser:
             return message.poll.question + " " + " ".join([answer.text for answer in message.poll.options])
 
     @staticmethod
-    def parceChannel(app, channel_dict: dict) -> dict:
-        channel_dict["messages"] = []
-        for message in app.get_chat_history(channel_dict["channel_name"], offset_date=Settings.ChannelsParser.date_to):
-            if message.date < Settings.ChannelsParser.date_from: break
-            if text := TGChannelsParser.getTextFromMessage(message):
-                channel_dict["messages"].append(text)
-        return channel_dict
+    def calculateChannelValue(app, channel_dict: dict) -> int:
+        value = 0
+        try:
+            for message in app.get_chat_history(channel_dict["channel_name"], offset_date=Settings.ChannelsParser.date_to):
+                if message.date < Settings.ChannelsParser.date_from: break
+                if text := TGChannelsParser.getTextFromMessage(message):
+                    value += DataHandler.find_marker_in_message(text)
+        except:
+            value = "channel not found"
 
-    # @staticmethod
-    # def channelsFilter(channels: list) -> list:
-    #     return list(
-    #         filter(
-    #             lambda channel: channel.members_count >= Settings.ChannelsFilter.min_members_to_track,
-    #             channels
-    #         )
-    #     )
-
-    # @staticmethod
-    # def reformatChannelsList(app, channel_names: list) -> list:
-    #     # for any item in channels list write some Channel object with data
-    #     result = []
-    #     with Bar('parse channels data', max=len(channel_names), fill="-") as bar:
-    #         for channel_name in channel_names:
-    #             chat = app.get_chat(channel_name)
-    #             result.append(Channel(chat.username, chat.title, chat.members_count))
-    #
-    #             bar.next()
-    #             if not bar.index % 2: sleep(2)
-    #
-    #     return result
+        return value
 
     @staticmethod
     def parse(channels) -> list:
-        import warnings
-        warnings.filterwarnings('ignore')
-
-        result = []
-
+        # clear file
+        with open(Settings.safe_result_in, "w", encoding="utf-8") as result_file:
+            result_file.write("")
+        # parse and write result
         with Client("my_account", Settings.ChannelsParser.api_id, Settings.ChannelsParser.api_hash) as app:
             with Bar('parse messages', max=len(channels), fill="-") as bar:
                 for channel_dict in channels:
-                    try:
-                        result.append(TGChannelsParser.parceChannel(app, channel_dict))
-                    except pyrogram.errors.exceptions.RPCError:
-                        pass
+                    value = TGChannelsParser.calculateChannelValue(app, channel_dict)
+                    with open(Settings.safe_result_in, "a", encoding="utf-8") as result_file:
+                        result_file.write(", ".join(list(map(str, channel_dict.values())) + [str(value)])+"\n")
                     bar.next()
 
-        return result
