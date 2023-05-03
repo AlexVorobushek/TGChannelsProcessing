@@ -3,18 +3,18 @@ import datetime
 
 class Settings:
     class ChannelsFinder:
-        parse_from = "html_file"  # "html_file" or "site" or "excel"
-        source = "html.txt"  # https://tgstat.ru/politics
-        safe_found_data_on_excel = "channels.xlsx"  # file name or False
+        parse_from = "excel"  # "html_file" or "site" or "excel"
+        source = "channels_1.xlsx"  # https://tgstat.ru/politics
+        safe_found_data_on_excel = False  # file name or False
 
     class ChannelsFilter:
-        min_members_to_track = 2000
+        min_members_to_track = 0
 
     class ChannelsParser:
-        api_id = 29232452
-        api_hash = "882ae83505e22099adf178785ba5c3b1"
-        date_from = datetime.datetime(2023, 4, 15, 0, 0, 0)
-        date_to = datetime.datetime(2023, 4, 30, 0, 0, 0)
+        api_id = 28026650
+        api_hash = "1cffcc4372876df5819b84dd1f79a635"
+        date_from = datetime.datetime(2023, 1, 1, 0, 0, 0)
+        date_to = datetime.datetime(2023, 5, 2, 0, 0, 0)
 
     class MessagesHandler:
         marker = [
@@ -22,3 +22,4 @@ class Settings:
         ]
 
     safe_result_in = "result.csv"
+    result_separator = ";"  # разделитель в результирующем файле
