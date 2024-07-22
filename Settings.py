@@ -12,7 +12,7 @@ class Settings:
 
     class ChannelsParser:
         api_id = 29232452
-        api_hash = "882ae83505e22099adf178785ba5c3b1"
+        api_hash = "882ae83505e22099adf178785ba5c3b1" # not active
         date_from = datetime.datetime(2023, 1, 1, 0, 0, 0)
         date_to = datetime.datetime(2023, 5, 2, 0, 0, 0)
 
